@@ -16,6 +16,7 @@ public class UchanController : MonoBehaviour
         animator = GetComponent<Animator>();
         GameManager.instance.UChanRegister(this);
         moveSpeedId = Animator.StringToHash("MoveSpeed");
+        GrandManager.finish += OnEnd;
     }
 
     // Update is called once per frame
@@ -44,7 +45,18 @@ public class UchanController : MonoBehaviour
     {
         moveDirection = Vector3.Lerp(moveDirection, worldDirection,Time.fixedDeltaTime* accerelation);
     }
+    void OnEnd()
+    {
+        transform.position = Vector3.zero;
+        moveDirection = Vector3.zero;
+        transform.rotation = Quaternion.LookRotation(Vector3.forward);
+        if (GameManager.instance.win)
+            animator.SetTrigger("Win");
+        else
+            animator.SetTrigger("Lose");
 
+        GrandManager.finish -= OnEnd;
+    }
     public void OnAnimatorIK()
     {
         if (goldCoin)

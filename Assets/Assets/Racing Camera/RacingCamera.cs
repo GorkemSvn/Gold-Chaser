@@ -75,6 +75,23 @@ public class RacingCamera : MonoBehaviour
     {
         SetHorizontalAngle(horizontalAngle);
         SetVerticalAngle(verticalAngle);
+        if (target)
+        {
+            Vector3 cameraDir = CameraDirection();
+
+            Vector3 targetPos;
+            if (localAngle)
+                targetPos = target.position + target.TransformDirection(cameraDir) * distance + offset;
+            else
+                targetPos = target.position + cameraDir * distance + offset;
+
+            if (smoothPosition)
+                transform.position = Vector3.Lerp(transform.position, targetPos, Time.fixedDeltaTime * 12f);
+            else
+                transform.position = targetPos;
+
+            transform.GetChild(0).LookAt(target.position);
+        }
     }
 
     [System.Serializable]

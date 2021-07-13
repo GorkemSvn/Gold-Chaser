@@ -46,8 +46,6 @@ public class GameManager : MonoBehaviour
         collectedGold = 0;
         win = false;
         GrandManager.CallStatusUpdate();
-
-
     }
 
     public void UChanRegister(UchanController uchan)
@@ -81,10 +79,14 @@ public class GameManager : MonoBehaviour
     {
         collectedGold += q;
         GrandManager.CallStatusUpdate();
+
+        if (collectedGold >= 100)
+            ReportEnd(true);
     }
 
     public void ReportEnd(bool win)
     {
+        StopCoroutine(characterControlProcess);
         this.win = win;
         GrandManager.CallFinishEvent();
     }
