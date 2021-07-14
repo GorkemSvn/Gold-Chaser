@@ -3404,7 +3404,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  accerelation: 2
+  accerelation: 6
+  point: 0
 --- !u!54 &8115131417452494624
 Rigidbody:
   m_ObjectHideFlags: 0

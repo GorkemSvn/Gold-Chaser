@@ -28,7 +28,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   turnSpeed: 4
   collectionSpeed: 1
-  target: {fileID: 0}
+  uiTarget: {fileID: 0}
+  value: 10
+  lifeLenght: 10
 --- !u!1001 &4097342205686282213
 PrefabInstance:
   m_ObjectHideFlags: 0

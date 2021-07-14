@@ -87,6 +87,7 @@ public class GameManager : MonoBehaviour
     public void ReportEnd(bool win)
     {
         StopCoroutine(characterControlProcess);
+        RacingCamera.instance.target = null;
         this.win = win;
         GrandManager.CallFinishEvent();
     }

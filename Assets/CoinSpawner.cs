@@ -14,14 +14,20 @@ public class CoinSpawner : MonoBehaviour
             UnityEngine.SceneManagement.SceneManager.LoadScene(0);
 
         coinPool.Instantiate();
-        StartCoroutine(spawningProcess());
-        GrandManager.finish += onFinish;
+        GrandManager.finish += OnFinish;
+        GrandManager.start += OnStart;
     }
 
-    void onFinish()
+    void OnStart()
+    {
+        StartCoroutine(spawningProcess());
+    }
+
+    void OnFinish()
     {
         enabled = false;
-        GrandManager.finish -= onFinish;
+        GrandManager.finish -= OnFinish;
+        GrandManager.start -= OnStart;
     }
     IEnumerator spawningProcess()
     {

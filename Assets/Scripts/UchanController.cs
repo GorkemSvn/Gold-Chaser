@@ -6,10 +6,13 @@ public class UchanController : MonoBehaviour
 {
     public float moveSpeed=2f;
     public float accerelation=1f;
+    public bool point;
     Animator animator;
     Vector3 moveDirection;
     int moveSpeedId;
     Coin goldCoin;
+    CapsuleCollider capsuleCollider;
+    bool onGround;
 
     void Start()
     {
@@ -17,11 +20,13 @@ public class UchanController : MonoBehaviour
         GameManager.instance.UChanRegister(this);
         moveSpeedId = Animator.StringToHash("MoveSpeed");
         GrandManager.finish += OnEnd;
+        capsuleCollider = GetComponent<CapsuleCollider>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        onGround = CheckGround();
         float sqrm = moveDirection.sqrMagnitude;
 
         animator.SetFloat(moveSpeedId, sqrm);
@@ -32,6 +37,7 @@ public class UchanController : MonoBehaviour
             transform.position += moveDirection * moveSpeed * Time.fixedDeltaTime;
         }
 
+        animator.SetBool("Airborn", !onGround);
     }
 
     public void OnTriggerEnter(Collider other)
@@ -43,22 +49,39 @@ public class UchanController : MonoBehaviour
 
     public void Control(Vector3 worldDirection)
     {
-        moveDirection = Vector3.Lerp(moveDirection, worldDirection,Time.fixedDeltaTime* accerelation);
+        if (onGround)
+        {
+            moveDirection = Vector3.Lerp(moveDirection, worldDirection, Time.fixedDeltaTime * accerelation);
+        }
+    }
+
+    bool CheckGround()
+    {
+        Vector3 origin = transform.position + Vector3.up * (capsuleCollider.radius + Physics.defaultContactOffset);
+        float distance = capsuleCollider.radius + Physics.defaultContactOffset;
+
+        return Physics.SphereCast(origin,capsuleCollider.radius, -Vector3.up, out RaycastHit hit,distance);
     }
     void OnEnd()
     {
-        transform.position = Vector3.zero;
         moveDirection = Vector3.zero;
-        transform.rotation = Quaternion.LookRotation(Vector3.forward);
         if (GameManager.instance.win)
+        {
             animator.SetTrigger("Win");
+            //transform.position = Vector3.zero;
+            //transform.rotation = Quaternion.LookRotation(Vector3.forward);
+        }
         else
             animator.SetTrigger("Lose");
 
+        point = false;
         GrandManager.finish -= OnEnd;
     }
     public void OnAnimatorIK()
     {
+        if (!point)
+            return;
+
         if (goldCoin)
         {
             Vector3 localpos = transform.InverseTransformPoint(goldCoin.transform.position);
