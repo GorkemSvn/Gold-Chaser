@@ -10,7 +10,7 @@ public class UchanController : MonoBehaviour
     Animator animator;
     Vector3 moveDirection;
     int moveSpeedId;
-    Coin goldCoin;
+    Coin detectedGoldCoin;
     CapsuleCollider capsuleCollider;
     bool onGround;
 
@@ -44,7 +44,7 @@ public class UchanController : MonoBehaviour
     {
         Coin c = other.GetComponent<Coin>();
         if (c)
-            goldCoin = c;
+            detectedGoldCoin = c;
     }
 
     public void Control(Vector3 worldDirection)
@@ -82,13 +82,13 @@ public class UchanController : MonoBehaviour
         if (!point)
             return;
 
-        if (goldCoin)
+        if (detectedGoldCoin)
         {
-            Vector3 localpos = transform.InverseTransformPoint(goldCoin.transform.position);
+            Vector3 localpos = transform.InverseTransformPoint(detectedGoldCoin.transform.position);
             if (localpos.z > 1f)
             {
                 animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1f);
-                animator.SetIKPosition(AvatarIKGoal.RightHand, goldCoin.transform.position);
+                animator.SetIKPosition(AvatarIKGoal.RightHand, detectedGoldCoin.transform.position);
             }
             else
             {
